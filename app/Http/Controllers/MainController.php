@@ -9,19 +9,22 @@ class MainController extends Controller
 {
     public function authors()
     {
-        $model = Author::paginate(2);
-        $books = [];
+        $model  = Author::paginate(2);
+        $books  = [];
+        $counts = [];
 
         foreach ($model as $key => $item) {
             foreach ($item->books as $book) {
                 $books[$key][] = $book->name;
+                $counts[$key]  = $item->books->count();
             }
         }
 
         return view(
             'author', [
-                        'data'  => $model,
-                        'books' => $books,
+                        'data'   => $model,
+                        'books'  => $books,
+                        'counts' => $counts,
                     ]
         );
     }
@@ -30,13 +33,13 @@ class MainController extends Controller
     {
         $books   = Book::paginate(
             2, [
-            'name',
-            'genre',
-            'publishing',
-            'year',
-            'ISBN',
-            'author_id',
-        ]
+                 'name',
+                 'genre',
+                 'publishing',
+                 'year',
+                 'ISBN',
+                 'author_id',
+             ]
         );
         $authors = [];
 

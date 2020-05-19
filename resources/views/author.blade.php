@@ -3,11 +3,13 @@
 <table class="table table-bordered">
     <tr>
         <th>Author</th>
+        <th>Count</th>
         <th>Books</th>
     </tr>
         @foreach($data as $key => $item)
         <tr>
             <td>{{$item->name}}</td>
+            <td>{{$counts[$key]}}</td>
             <td>
             @foreach($books[$key] as $book)
                 <ol>{{$book}}</ol>
