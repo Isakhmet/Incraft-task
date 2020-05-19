@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Author;
 use App\Models\Book;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class BooksController extends Controller
 {
@@ -36,15 +36,16 @@ class BooksController extends Controller
 
     public function bookById($id)
     {
-        return $this->book->find($id)->toArray();
+        return $this->book->find($id)
+                          ->toArray()
+            ;
     }
 
     public function create(Request $request)
     {
-        $validation = Validator::make($request->all(), config('rules.create'));
+        $validation = Validator::make($request->all(), config('rules.books.create'));
 
-        if ($validation->fails())
-        {
+        if ($validation->fails()) {
             return $validation->errors();
         }
 
@@ -70,7 +71,7 @@ class BooksController extends Controller
 
             return [
                 'status' => 'error',
-                'error'  => $exception->getMessage()
+                'error'  => $exception->getMessage(),
             ];
         }
 
@@ -79,16 +80,27 @@ class BooksController extends Controller
 
     public function update(Request $request)
     {
-        $validation = Validator::make($request->all(), config('rules.update'));
+        $validation = Validator::make($request->all(), config('rules.books.update'));
 
-        if ($validation->fails())
-        {
+        if ($validation->fails()) {
             return $validation->errors();
         }
 
-        $data = $request->toArray();
+        $data     = $request->toArray();
+        $authorId = null;
 
         try {
+            if (isset($data['author']) && !empty($data['author'])) {
+                $author = Author::where('name', $data['author'])
+                                ->first(['id'])
+                ;
+
+                $authorId = $author->id ?? null;
+            }
+
+            $data['author_id'] = $authorId;
+            unset($data['author']);
+
             $this->book
                 ->where('id', $data['id'])
                 ->update($data)
@@ -98,7 +110,7 @@ class BooksController extends Controller
 
             return [
                 'status' => 'error',
-                'error'  => $exception->getMessage()
+                'error'  => $exception->getMessage(),
             ];
         }
 

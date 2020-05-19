@@ -18,10 +18,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('v1/books')->group(function (){
-    Route::get('list', 'BooksController@list');
-    Route::get('{id}', 'BooksController@bookById');
-    Route::post('create', 'BooksController@create');
-    Route::post('update', 'BooksController@update');
-    Route::delete('{id}', 'BooksController@delete');
+Route::prefix('v1')->group(function (){
+    Route::prefix('books')->group(function (){
+        Route::get('list', 'BooksController@list');
+        Route::get('{id}', 'BooksController@bookById');
+        Route::post('create', 'BooksController@create');
+        Route::post('update', 'BooksController@update');
+        Route::delete('{id}', 'BooksController@delete');
+    });
+
+    Route::prefix('authors')->group(function (){
+        Route::post('create', 'AuthorController@create');
+        Route::post('update', 'AuthorController@update');
+        Route::delete('{id}', 'AuthorController@delete');
+    });
 });
