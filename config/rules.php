@@ -1,11 +1,11 @@
 <?php
     return [
         'create' => [
-            'name'       => 'required',
+            'name'       => 'required|string',
             'genre'      => 'nullable|string',
             'publishing' => 'nullable|string',
             'year'       => 'nullable|string',
-            'ISBN'       => 'nullable|integer',
+            'ISBN'       => 'required|integer',
             'author'     => 'nullable|string',
         ],
         'update' => [
